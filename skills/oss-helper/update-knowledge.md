@@ -1,37 +1,11 @@
-# Update Knowledge
-
-Update a project's rule files when project conventions change (e.g., new build tool, updated contribution guidelines, changed branching strategy). Accepts either a textual description of changes or a URL to a document containing project conventions.
-
-## Usage
-
-```
-/oss-update-knowledge <source>
-```
-
-**Arguments:**
-- `<source>` - Either a textual description of what to update, or a URL to a document containing project conventions
-
-**Examples:**
-```
-/oss-update-knowledge "Build tool changed from Maven to Gradle, new build command is gradle build"
-/oss-update-knowledge https://github.com/org/repo/blob/main/CONTRIBUTING.md
-/oss-update-knowledge "Added SonarCloud, component key is org_repo"
-```
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Parse Input
+### 1. Parse Input
 
 Determine whether the source argument is a URL or a text description:
 
 - **URL** - Starts with `http://` or `https://`
 - **Text description** - Everything else
 
-### 3. Retrieve Information
+### 2. Retrieve Information
 
 **If URL:**
 1. Fetch the document content using WebFetch or equivalent
@@ -41,14 +15,14 @@ Determine whether the source argument is a URL or a text description:
 **If text description:**
 1. Use the description directly as the source of changes
 
-### 4. Read Current Rules
+### 3. Read Current Rules
 
 Read the three rule files for the matched project:
 - `<project>/project-info.md`
 - `<project>/project-standards.md`
 - `<project>/project-guidelines.md`
 
-### 5. Analyze & Propose Changes
+### 4. Analyze & Propose Changes
 
 Compare the retrieved information against the current rule file contents. Identify:
 
@@ -61,7 +35,7 @@ For each proposed change, note:
 - The current value
 - The new value
 
-### 6. Confirm with User
+### 5. Confirm with User
 
 Present the proposed changes to the user in a clear format:
 
@@ -81,20 +55,20 @@ project-info.md:
 
 Ask the user to confirm before applying. If the user rejects or wants modifications, adjust accordingly.
 
-### 7. Apply Changes
+### 6. Apply Changes
 
 Once confirmed, update the rule files with the approved changes. Preserve the existing file format and structure - only modify the specific values that were approved.
 
-### 8. Publish the Updated Rules
+### 7. Publish the Updated Rules
 
 If the rules being updated live in:
 
 - `<repo-root>/.oss-ai-helper-rules/` (project-local): commit the edits in the project repository and open a PR there. The rules travel with the project, so no other repository needs to change.
-- `ai-agents-oss-known-projects` (centralized): commit the edits in that repository and open a PR. Once merged, users can pick up the changes by re-running `/oss-install-info <project>`. The `## Version` SHA at the bottom of each rule file should be bumped to the new commit so the version check in `.oss-init.md` detects the update.
+- `ai-agents-oss-known-projects` (centralized): commit the edits in that repository and open a PR. Once merged, users can pick up the changes by re-running `the Install Info guideline (`install-info.md`)`. The `## Version` SHA at the bottom of each rule file should be bumped to the new commit so the version check in `.oss-init.md` detects the update.
 
 Renaming a project directory inside `ai-agents-oss-known-projects` is a breaking change — coordinate with users that have already installed the old slug before doing it.
 
-### 9. Constraints
+### 8. Constraints
 
 You MUST:
 - Read all three rule files before proposing changes
@@ -110,7 +84,7 @@ You MUST NOT:
 - Modify rule files for other projects
 - Remove fields from rule files (set to `_(none)_` if clearing a value)
 
-### 10. Acceptance Criteria
+### 9. Acceptance Criteria
 
 - The correct project was detected and its rule files were read
 - The source was correctly parsed (URL fetched or text used directly)

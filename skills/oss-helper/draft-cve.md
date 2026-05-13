@@ -1,28 +1,4 @@
-# Draft CVE Advisory
-
-Draft a project-specific CVE advisory page (e.g. Apache Camel-style `CVE-YYYY-NNNNN.html`) from a reserved CVE number, a reference advisory used as a format template, and optional context from a prior triage report and fix PR.
-
-This command is drafting-only: it produces the advisory files locally for the maintainer to review, sign, and publish. It never pushes to a public security site, submits to MITRE, or reserves CVE identifiers.
-
-## Usage
-
-```
-/oss-draft-cve <cve_id> template=<url_or_path> [triage_ref=<path_or_url>] [fix_pr=<pr_or_url>]
-```
-
-**Arguments:**
-- `<cve_id>` - The **reserved** CVE ID (e.g. `CVE-2026-25747`). Required. The command does not reserve IDs — it only drafts against one already issued by the CNA.
-- `template=<url_or_path>` - Required. URL to a reference advisory (e.g. `https://camel.apache.org/security/CVE-2026-25747.html`) **or** a local file (`.md` / `.pdf` / `.html`) whose layout the draft should match.
-- `triage_ref=<path_or_url>` - Optional. Path or URL to the output of `/oss-triage-security-report`. Used to auto-populate description, affected code paths, and severity.
-- `fix_pr=<pr_or_url>` - Optional. PR number or URL containing the fix. Used to extract fixed-version ranges, commit hashes, and issue references.
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Parse Input
+### 1. Parse Input
 
 Parse the argument string into four values:
 
@@ -33,7 +9,7 @@ Parse the argument string into four values:
 
 If `cve_id` or `template` is missing, stop and print the usage block above.
 
-### 3. Validate the Reserved CVE ID
+### 2. Validate the Reserved CVE ID
 
 Validate that `cve_id` matches the CVE naming convention: `CVE-<YYYY>-<NNNN or longer>`.
 
@@ -47,7 +23,7 @@ Remind the user:
 
 > This command assumes `<cve_id>` has already been reserved by the CNA. If it has not, stop here and reserve it first. Drafting against an unreserved ID risks publishing with an ID that later gets assigned to someone else's vulnerability.
 
-### 4. Acquire the Template
+### 3. Acquire the Template
 
 Determine the `template` source:
 
@@ -59,7 +35,7 @@ Determine the `template` source:
 
 Store the template's raw text for parsing in the next step.
 
-### 5. Extract the Template Skeleton
+### 4. Extract the Template Skeleton
 
 Parse the template to identify the section structure **used by this project**. Do NOT assume the Apache Camel layout — each project has its own house style. Look for headings, bolded labels, or field-value pairs such as:
 
@@ -78,7 +54,7 @@ Parse the template to identify the section structure **used by this project**. D
 
 Produce an ordered list of the template's sections with their exact labels. Present this skeleton to the user and ask them to confirm before populating — they may want to add, remove, or rename a section to match a newer house style.
 
-### 6. Gather Content
+### 5. Gather Content
 
 Collect the content needed to fill each section. Use every available source before asking the user.
 
@@ -125,7 +101,7 @@ TODO: <what is missing and where it should come from>
 
 Do NOT guess CVSS scores, CWE mappings, severity ratings, version ranges, or reporter names. A wrong CVE advisory is worse than an incomplete one.
 
-### 7. Emit Artifacts
+### 6. Emit Artifacts
 
 Produce two files side by side in the repository root (or the path the user specifies):
 
@@ -142,7 +118,7 @@ Include a top banner in both files:
 
 The banner MUST be removed manually before signing and publishing.
 
-### 8. Review Checklist
+### 7. Review Checklist
 
 After writing the files, print a checklist for the maintainer to run through before publication. Do NOT mark any item as done for them.
 
@@ -162,7 +138,7 @@ After writing the files, print a checklist for the maintainer to run through bef
 - [ ] Plaintext body clearsigned with the project release key (`gpg --clearsign <cve_id>.txt` → `<cve_id>.txt.asc`).
 ```
 
-### 9. Constraints
+### 1. Constraints
 
 You MUST:
 - Validate the CVE ID format before doing anything else.
@@ -180,7 +156,7 @@ You MUST NOT:
 - Submit the draft to MITRE, a project security site, or a public tracker.
 - Overwrite an existing `<cve_id>.<ext>` or `<cve_id>.txt` without confirming with the user.
 
-### 10. Acceptance Criteria
+### 2. Acceptance Criteria
 
 - The reserved `cve_id` is validated and carried through both artifacts unchanged.
 - The advisory layout matches the sections and labels of the provided template.

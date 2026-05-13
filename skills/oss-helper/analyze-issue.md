@@ -1,23 +1,4 @@
-# Analyze Issue
-
-Analyze an issue from the current project's issue tracker to gain deeper understanding of the problem, especially when the issue lacks details or requires codebase investigation.
-
-## Usage
-
-```
-/oss-analyze-issue <issue>
-```
-
-**Arguments:**
-- `<issue>` - Issue identifier: numeric ID (e.g., `42`), alphanumeric ID (e.g., `CAMEL-20410`), or full URL
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Parse Input
+### 1. Parse Input
 
 Extract the issue ID from the argument based on the project's issue tracker type (from the project's `project-info.md`):
 
@@ -29,7 +10,7 @@ Extract the issue ID from the argument based on the project's issue tracker type
 - If full URL: extract the ID from the path
 - If ID only: use as-is
 
-### 3. Retrieve Issue Details
+### 2. Retrieve Issue Details
 
 **GitHub projects:**
 
@@ -60,7 +41,7 @@ curl -s "https://issues.apache.org/jira/rest/api/2/issue/<ISSUE_ID>" | jq '{
 
 **Rate Limiting:** For Jira, make ONE request only.
 
-### 4. Analyze Issue Content
+### 3. Analyze Issue Content
 
 From the retrieved information, identify:
 
@@ -70,7 +51,7 @@ From the retrieved information, identify:
 4. **Missing Information** - What details are lacking?
 5. **Keywords** - Error messages, component names, feature names
 
-### 5. Investigate the Codebase
+### 4. Investigate the Codebase
 
 Based on keywords and context from the issue:
 
@@ -104,7 +85,7 @@ For each relevant related repository, clone if needed:
 gh repo clone <RELATED_REPO> /tmp/<repo-name>
 ```
 
-### 6. Build Understanding
+### 5. Build Understanding
 
 Synthesize findings into:
 
@@ -113,7 +94,7 @@ Synthesize findings into:
 3. **Related Code Paths** - Trace the execution flow
 4. **Potential Solutions** - Possible approaches to fix
 
-### 7. Present Analysis
+### 6. Present Analysis
 
 Provide a structured analysis report to the user:
 
@@ -156,14 +137,14 @@ Provide a structured analysis report to the user:
 - <question 2>
 ```
 
-### 8. Suggest Follow-up Actions
+### 1. Suggest Follow-up Actions
 
 Based on the analysis, recommend:
 
 - **If issue needs more info**: Suggest questions to ask the reporter
-- **If ready to fix**: Direct to `/oss-fix-issue <ID>`
+- **If ready to fix**: Direct to `the Fix Issue guideline (`fix-issue.md`)`
 
-### 9. Constraints
+### 2. Constraints
 
 You MUST:
 - Include the :robot: disclaimer note at the beginning of every analysis report
@@ -180,7 +161,7 @@ You MUST NOT:
 - Skip investigating related repositories when relevant
 - For Jira: make multiple API requests
 
-### 10. Acceptance Criteria
+### 3. Acceptance Criteria
 
 - Issue is fully analyzed with structured report
 - Relevant code sections are identified

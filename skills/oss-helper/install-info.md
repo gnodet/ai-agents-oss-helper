@@ -1,27 +1,3 @@
-# Install Project Rules
-
-Install project rules from the `ai-agents-oss-known-projects` repository into the local agent rules directory. Use this when the current project does not ship its own `.oss-ai-helper-rules/` directory and the helper has no installed rules that match the current git remote.
-
-## Usage
-
-```
-/oss-install-info [project]
-```
-
-**Arguments:**
-- `<project>` (optional) - Project slug to install (e.g., `camel-core`, `wanaku`). Use `auto` to detect the slug from the current git remote, or `all` to install every project in the known-projects repository. If omitted, the command lists the projects available in the known-projects repository.
-
-**Examples:**
-```
-/oss-install-info                # list available projects
-/oss-install-info wanaku         # install rules for wanaku
-/oss-install-info camel-core     # install rules for Apache Camel core
-/oss-install-info auto           # detect current git remote and install the matching project
-/oss-install-info all            # install every project in the known-projects repository
-```
-
-## Instructions
-
 ### 1. Resolve Known-Projects Repository
 
 Use the following values (override via environment if set):
@@ -68,12 +44,12 @@ Render a numbered table:
 | 2 | wanaku | no |
 | ... | ... | ... |
 
-Run `/oss-install-info <project>` to install one.
+Run `the Install Info guideline (`install-info.md`)` to install one.
 ```
 
 Stop after rendering.
 
-### 4. Auto Mode (`<project>` is `auto`)
+### 1. Auto Mode (`<project>` is `auto`)
 
 Detect the slug from the current git remote:
 
@@ -86,13 +62,13 @@ Extract the GitHub `org/repo` from the URL (handle both `https://github.com/org/
 Find the project in the known-projects repository whose `project-info.md` has a `Remote pattern:` matching `org/repo`. List the candidate projects with `gh api .../contents`, then fetch each `project-info.md` only as needed until a match is found. Stop fetching as soon as a match is found.
 
 If no match is found, report:
-> No project in `<OSS_KNOWN_PROJECTS_REPO>` matches the current git remote (`<org/repo>`). Run `/oss-install-info` to list available projects, or run `/oss-add-project` to create new rules.
+> No project in `<OSS_KNOWN_PROJECTS_REPO>` matches the current git remote (`<org/repo>`). Run the Install Info guideline (`install-info.md`) to list available projects, or run the Add Project guideline (`add-project.md`) to create new rules.
 
 Stop.
 
 If a match is found, use that slug and continue with the install steps below.
 
-### 5. All Mode (`<project>` is `all`)
+### 2. All Mode (`<project>` is `all`)
 
 Install every project listed in the known-projects repository.
 
@@ -131,7 +107,7 @@ The next OSS Helper command run from any project that matches one of these remot
 
 Stop after rendering the summary.
 
-### 6. Install Mode (project slug provided)
+### 1. Install Mode (project slug provided)
 
 #### 6.1 Validate the project exists
 
@@ -142,7 +118,7 @@ gh api "repos/<OSS_KNOWN_PROJECTS_REPO>/contents/<project>/project-info.md?ref=<
 ```
 
 If the project is not found, report:
-> Project `<project>` not found in `<OSS_KNOWN_PROJECTS_REPO>`. Run `/oss-install-info` to list available projects.
+> Project `<project>` not found in `<OSS_KNOWN_PROJECTS_REPO>`. Run the Install Info guideline (`install-info.md`) to list available projects.
 
 Stop.
 
@@ -188,7 +164,7 @@ Installed rules for <project> to <RULES_DIR>/<project>/:
 Suggest the next step:
 > The next time you run an OSS Helper command from a project whose git remote matches `<remote-pattern>`, these rules will be loaded automatically.
 
-### 7. Constraints
+### 2. Constraints
 
 You MUST:
 - Make minimal API calls — per project: one to validate, three to fetch the rule files, plus one extra to compare versions if a local copy already exists
@@ -204,7 +180,7 @@ You MUST NOT:
 - Touch project-local `.oss-ai-helper-rules/` directories (those take precedence over installed rules)
 - Prompt the user once per project in `all` mode — collect overwrite consent at most once
 
-### 8. Acceptance Criteria
+### 3. Acceptance Criteria
 
 - The three rule files for each requested `<project>` are present in `<RULES_DIR>/<project>/` after the command completes successfully
 - The local `## Version` SHA matches the remote SHA for each installed project

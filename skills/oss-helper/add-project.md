@@ -1,25 +1,3 @@
-# Add New Project
-
-Add a new project to the AI Agents OSS Helper by adding its configuration to the rule files.
-
-## Usage
-
-```
-/oss-add-project <name> <description>
-```
-
-**Arguments:**
-- `<name>` - Short project name (e.g., `my-project`)
-- `<description>` - What the project is and relevant details (repo URL, issue tracker type, build tool, etc.)
-
-**Examples:**
-```
-/oss-add-project my-project "Java project at https://github.com/org/my-project, uses Maven, GitHub issues"
-/oss-add-project my-jira-project "Java project at https://github.com/apache/my-project, uses Jira at https://issues.apache.org/jira, SonarCloud key: apache_my-project"
-```
-
-## Instructions
-
 ### 1. Parse Input
 
 Extract from arguments:
@@ -59,7 +37,7 @@ If the remote `.oss-ai-helper-rules/` directory does not exist or is incomplete,
 Determine where to create the rule files based on the current working directory:
 
 - **If you are inside the target project's repository:** Create the rules in `<repo-root>/.oss-ai-helper-rules/`. This is the **recommended** approach — rules are versioned with the project and shared automatically across all contributors and agents.
-- **If you are inside the `ai-agents-oss-known-projects` repository** (or not inside the target project): Create a new subdirectory at the root named after the project (e.g., `my-project/`). These will be available for any user to install via `/oss-install-info my-project`.
+- **If you are inside the `ai-agents-oss-known-projects` repository** (or not inside the target project): Create a new subdirectory at the root named after the project (e.g., `my-project/`). These will be available for any user to install via the Install Info guideline (`install-info.md`).
 
 Add three rule files to the chosen directory:
 
@@ -120,7 +98,7 @@ Use any existing project directory in the [`ai-agents-oss-known-projects`](https
 **If rules were created in `.oss-ai-helper-rules/` (project-local):** The rules travel with the repository and do not need any other publication step. Inform the user:
 > Project rules created in `.oss-ai-helper-rules/`. Review and commit them to share with other contributors.
 
-**If rules were created in the `ai-agents-oss-known-projects` repository:** Commit and open a PR so the rules become installable via `/oss-install-info <project>`:
+**If rules were created in the `ai-agents-oss-known-projects` repository:** Commit and open a PR so the rules become installable via `the Install Info guideline (`install-info.md`)`:
 
 ```bash
 git checkout -b add/<project>
@@ -131,7 +109,7 @@ gh pr create --title "add: rules for <project>" --body "..."
 ```
 
 Inform the user:
-> Rules for `<project>` are queued for publication in `ai-agents-oss-known-projects`. Once the PR is merged, anyone can install them with `/oss-install-info <project>`.
+> Rules for `<project>` are queued for publication in `ai-agents-oss-known-projects`. Once the PR is merged, anyone can install them with `the Install Info guideline (`install-info.md`)`.
 
 ### 6. Constraints
 
@@ -151,5 +129,5 @@ You MUST NOT:
 After adding the project, confirm:
 - Where the rule files were created (`.oss-ai-helper-rules/` in the target project, or `<project>/` in `ai-agents-oss-known-projects`)
 - If project-local: remind the user to commit and push the `.oss-ai-helper-rules/` directory
-- If in the known-projects repo: confirm the PR has been opened and remind the user that `/oss-install-info <project>` will work once it is merged
-- How to use the project with existing commands (e.g., `cd my-project && /oss-fix-issue 42`)
+- If in the known-projects repo: confirm the PR has been opened and remind the user that `the Install Info guideline (`install-info.md`)` will work once it is merged
+- How to use the project with the OSS Helper (e.g., `cd my-project` and ask to fix an issue)

@@ -1,23 +1,4 @@
-# Merge Pull Request
-
-Merge a pull request after verifying all requirements are met: CI green, approvals, no unresolved discussions.
-
-## Usage
-
-```bash
-/oss-merge-pr [pr]
-```
-
-**Arguments:**
-- `[pr]` - Pull request number or full GitHub URL (optional). If omitted, detects the PR for the current branch.
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (`project-info.md`, `project-standards.md`, `project-guidelines.md`) is loaded.
-
-### 2. Identify the Pull Request
+### 1. Identify the Pull Request
 
 - If a PR number or URL is provided, use it.
 - If omitted, detect from the current branch:
@@ -26,7 +7,7 @@ Merge a pull request after verifying all requirements are met: CI green, approva
   ```
 - If no PR is found, abort: "No pull request found for the current branch."
 
-### 3. Pre-merge Checks
+### 2. Pre-merge Checks
 
 Run ALL of the following checks. If ANY check fails, abort and report which checks failed.
 
@@ -60,7 +41,7 @@ Verify the PR has the required number of approvals. Check the project's `project
 
 If insufficient approvals, abort: "Only N approval(s) found. Need at least M."
 
-### 4. Understand the Full Changeset
+### 3. Understand the Full Changeset
 
 #### 4.1 Read PR Context
 
@@ -93,7 +74,7 @@ git diff --stat main...HEAD
 
 If a linked issue is found, fetch its details for context.
 
-### 5. Write the Merge Commit Message
+### 4. Write the Merge Commit Message
 
 Compose a squash-merge commit message following the commit format from the project's `project-guidelines.md`.
 
@@ -110,7 +91,7 @@ Closes #<PR number>
 
 The `<prefix>` depends on the project conventions (e.g., issue ID for Jira projects, `Fix #N` for GitHub projects, or a conventional commit prefix).
 
-### 6. Confirm with User
+### 5. Confirm with User
 
 Present the following for approval before proceeding:
 - Pre-merge check results (all passed)
@@ -119,7 +100,7 @@ Present the following for approval before proceeding:
 
 **Wait for explicit user approval.**
 
-### 7. Merge
+### 6. Merge
 
 Execute the squash merge:
 
@@ -133,7 +114,7 @@ Verify the merge succeeded:
 gh pr view <number> --repo <GITHUB_REPO> --json state --jq '.state'
 ```
 
-### 8. Cleanup
+### 7. Cleanup
 
 - Confirm the remote branch was deleted.
 - If the local branch matches the PR branch, switch to `main` and pull:
@@ -141,7 +122,7 @@ gh pr view <number> --repo <GITHUB_REPO> --json state --jq '.state'
   git checkout main && git pull
   ```
 
-### 9. Constraints
+### 8. Constraints
 
 You MUST:
 - Run all pre-merge checks before proceeding
@@ -157,7 +138,7 @@ You MUST NOT:
 - Merge without user confirmation
 - Force-merge or bypass branch protections
 
-### 10. Acceptance Criteria
+### 9. Acceptance Criteria
 
 - All pre-merge checks passed
 - User approved the commit message

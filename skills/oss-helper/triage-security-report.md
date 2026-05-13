@@ -1,25 +1,4 @@
-# Triage Security Report
-
-Triage an inbound security vulnerability report by verifying each claim against the current codebase, checking git history for prior fixes or related CVEs, and preparing a structured triage summary. After triage, guide the user to the appropriate follow-up action (private disclosure, tracking issue without security details, or dismissal).
-
-This command does NOT publish any security details to public trackers. It is a local investigative workflow.
-
-## Usage
-
-```
-/oss-triage-security-report [source]
-```
-
-**Arguments:**
-- `[source]` - Optional. Path to a file containing the report, a URL, or the literal keyword `paste`. If omitted, the agent will ask the user to paste the report content inline.
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Acquire the Report
+### 1. Acquire the Report
 
 Determine the report source from the argument:
 
@@ -29,7 +8,7 @@ Determine the report source from the argument:
 
 Store the raw report text for later reference. Do NOT echo it back in full — reference sections as needed.
 
-### 3. Establish Confidentiality
+### 2. Establish Confidentiality
 
 **Before proceeding, remind the user:**
 
@@ -40,7 +19,7 @@ Ask the user:
 - Is this report **already public** (e.g., a published CVE, a public GitHub issue, a blog post)? If yes, note this — the disclosure path differs.
 - Was it received **privately** (security mailing list, private advisory, direct email)? If yes, treat all specifics as confidential during triage.
 
-### 4. Extract Claims from the Report
+### 3. Extract Claims from the Report
 
 Parse the report and list each individual technical claim as a bullet. Typical claims to extract:
 
@@ -54,7 +33,7 @@ Parse the report and list each individual technical claim as a bullet. Typical c
 
 Present this extracted list back to the user for confirmation. Ask whether any claim was misread.
 
-### 5. Verify Each Claim in the Codebase
+### 4. Verify Each Claim in the Codebase
 
 For each extracted claim, perform verification. Do NOT take the reporter at face value — the report may be inaccurate, out of date, or based on an older version.
 
@@ -94,7 +73,7 @@ Review what the original fix changed and whether it covers the surface area the 
 
 Use `Grep` / `Glob` to find sibling classes in the same family (e.g., other `*HeaderFilterStrategy` implementations). Check whether the same defect pattern exists in code the reporter did not enumerate. Scope drift is common; the reporter often sees only what they tested.
 
-### 6. Build the Triage Summary
+### 5. Build the Triage Summary
 
 Produce a structured summary. Include both the validated facts and your confidence level. Do NOT overstate certainty.
 
@@ -144,23 +123,23 @@ Produce a structured summary. Include both the validated facts and your confiden
 - <question 2>
 ```
 
-### 7. Propose a Follow-up Path
+### 1. Propose a Follow-up Path
 
 Based on the recommendation, offer the user one or more of the following actions. Do NOT execute any of them without explicit confirmation.
 
 **If valid and not public:**
 
-1. **Submit a private advisory** (GitHub projects) - hand off to `/oss-create-security-advisory` with the full technical detail. This is the preferred path when private vulnerability reporting is available.
+1. **Submit a private advisory** (GitHub projects) - hand off to the Create Security Advisory guideline (`create-security-advisory.md`) with the full technical detail. This is the preferred path when private vulnerability reporting is available.
 2. **Contact the project's security team directly** (ASF projects) - provide the user with the appropriate `security@<project>.apache.org` or `private@<project>.apache.org` address and a draft email body.
 
 **If valid and already public, or safe to track as hardening:**
 
-3. **File a generic tracking issue** - hand off to `/oss-create-issue`. The agent MUST propose issue text that:
+3. **File a generic tracking issue** - hand off to the Create Issue guideline (`create-issue.md`). The agent MUST propose issue text that:
    - Frames the change as a consistency / hardening / refactor task.
    - Lists the affected classes and the code-level change needed.
    - References an existing related ticket only if the reporter's claim clearly continues that work. Do not invent a parent relationship.
    - **Omits** the attack scenario, exploit payload, CVE reference, reporter identity, severity wording, and any language that describes the defect as a vulnerability.
-   - Ask the user to confirm the sanitized text before calling `/oss-create-issue`.
+   - Ask the user to confirm the sanitized text before calling the Create Issue guideline (`create-issue.md`).
 
 **If invalid:**
 
@@ -170,7 +149,7 @@ Based on the recommendation, offer the user one or more of the following actions
 
 5. **Point to the existing ticket/CVE** - draft a short acknowledgement referencing the prior work.
 
-### 8. Constraints
+### 2. Constraints
 
 You MUST:
 - Include the :robot: disclaimer note at the top of the triage summary.
@@ -178,7 +157,7 @@ You MUST:
 - Check git history for prior fixes, related CVEs, and parent tickets.
 - Keep all exploit specifics (payloads, PoC code, reproduction commands) **out** of any public-facing artifact the user may generate afterwards.
 - Ask the user before fetching URLs or contacting external systems.
-- When handing off to `/oss-create-issue`, present the sanitized text for explicit confirmation first.
+- When handing off to the Create Issue guideline (`create-issue.md`), present the sanitized text for explicit confirmation first.
 
 You MUST NOT:
 - Submit any issue, PR, advisory, or public comment as part of this command. Handoffs go through the dedicated commands only after user confirmation.
@@ -187,7 +166,7 @@ You MUST NOT:
 - Run any code that performs the exploit against a live system, even locally. Verification reproducers must isolate the logic (e.g., a standalone class, a unit-test-style snippet) and not interact with real services.
 - Tell the reporter the report is invalid without completing verification.
 
-### 9. Acceptance Criteria
+### 3. Acceptance Criteria
 
 - Every technical claim in the report is mapped to a verification outcome (confirmed / refuted / partial).
 - Git history has been checked for prior work in the affected area.

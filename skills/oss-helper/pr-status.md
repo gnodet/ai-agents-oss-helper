@@ -1,23 +1,4 @@
-# PR Status
-
-Check the status of a pull request in the current project's repository, including CI checks, review state, and merge readiness.
-
-## Usage
-
-```
-/oss-pr-status [pr]
-```
-
-**Arguments:**
-- `[pr]` - Pull request identifier: number (e.g., `42`), full URL, or omitted to auto-detect from the current branch
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Parse Input
+### 1. Parse Input
 
 Determine the pull request to inspect:
 
@@ -32,7 +13,7 @@ Determine the pull request to inspect:
   If no PR is associated with the current branch, **STOP** and inform the user:
   > No pull request found for the current branch. Please provide a PR number or URL.
 
-### 3. Retrieve PR Details
+### 2. Retrieve PR Details
 
 Fetch the pull request metadata:
 
@@ -40,7 +21,7 @@ Fetch the pull request metadata:
 gh pr view <PR_NUMBER> --repo <GITHUB_REPO> --json number,title,state,isDraft,mergeable,baseRefName,headRefName,author,reviewDecision,reviewRequests,labels,milestone,createdAt,updatedAt
 ```
 
-### 4. Retrieve CI Check Status
+### 3. Retrieve CI Check Status
 
 Fetch the status of all CI checks:
 
@@ -48,7 +29,7 @@ Fetch the status of all CI checks:
 gh pr checks <PR_NUMBER> --repo <GITHUB_REPO>
 ```
 
-### 5. Retrieve Reviews
+### 4. Retrieve Reviews
 
 Fetch review details:
 
@@ -56,7 +37,7 @@ Fetch review details:
 gh pr view <PR_NUMBER> --repo <GITHUB_REPO> --json reviews --jq '.reviews[] | {author: .author.login, state: .state, submittedAt: .submittedAt}'
 ```
 
-### 6. Retrieve Comments
+### 5. Retrieve Comments
 
 Fetch recent comments for context on any open discussion:
 
@@ -64,7 +45,7 @@ Fetch recent comments for context on any open discussion:
 gh pr view <PR_NUMBER> --repo <GITHUB_REPO> --comments
 ```
 
-### 7. Present Status Report
+### 6. Present Status Report
 
 Provide a structured status report to the user:
 
@@ -102,17 +83,17 @@ Provide a structured status report to the user:
 <Summary of last 3-5 comments if relevant discussion exists, otherwise "No recent discussion.">
 ```
 
-### 8. Suggest Next Steps
+### 1. Suggest Next Steps
 
 Based on the status, recommend actions:
 
-- **Failing CI checks**: Suggest `/oss-fix-ci-errors <run-id>` with the failed run ID
+- **Failing CI checks**: Suggest `the Fix CI Errors guideline (`fix-ci-errors.md`)` with the failed run ID
 - **Changes requested**: Summarize what reviewers asked for
 - **Merge conflicts**: Suggest rebasing onto the base branch
 - **Draft PR**: Suggest marking as ready for review if appropriate
 - **All clear**: Inform the user the PR is ready to merge
 
-### 9. Constraints
+### 2. Constraints
 
 You MUST:
 - Present all information clearly and structured
@@ -126,7 +107,7 @@ You MUST NOT:
 - Dismiss reviews or re-request reviews
 - Make changes to any code
 
-### 10. Acceptance Criteria
+### 3. Acceptance Criteria
 
 - PR status is fully reported with CI, review, and merge readiness details
 - All blocking items are clearly identified

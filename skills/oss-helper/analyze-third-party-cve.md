@@ -1,26 +1,4 @@
-# Analyze Third-Party Dependency CVE
-
-Analyze whether the current project is exposed to a specific CVE in a third-party dependency, by combining the advisory record (NVD / GHSA / OSV / vendor), any available exploitation details, and the project's actual usage of the dependency. Produce a structured exposure report and propose a follow-up action.
-
-This command is the dependency-side counterpart of `/oss-triage-security-report`: that command triages an inbound report against the project's own code, while this one triages a publicly known CVE that lives in a dependency the project consumes. It does NOT publish anything to public trackers — it is a local investigative workflow.
-
-## Usage
-
-```
-/oss-analyze-third-party-cve <CVE-ID> [dependency-coordinates]
-```
-
-**Arguments:**
-- `<CVE-ID>` - CVE or GHSA identifier (e.g., `CVE-2024-12345`, `GHSA-abcd-efgh-1234`).
-- `[dependency-coordinates]` - Optional. Disambiguates which artifact to focus on when the CVE record covers multiple packages (e.g., `org.apache.commons:commons-text`, `lodash`, `github.com/foo/bar`). If omitted, the command infers the affected dependency from the CVE record and walks each one.
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Establish Boundaries
+### 1. Establish Boundaries
 
 **Before proceeding, remind the user:**
 
@@ -30,7 +8,7 @@ Confirm with the user:
 - Is the CVE **already public** (default for assigned CVE/GHSA identifiers)?
 - Does any embargo or private advisory channel still apply (e.g., the user received the CVE detail under a coordinated-disclosure agreement before the public publication)? If yes, treat all specifics as confidential during analysis.
 
-### 3. Fetch CVE Metadata
+### 2. Fetch CVE Metadata
 
 Fetch the advisory record from public sources, in this order. Stop at the first authoritative match and use later sources only to fill gaps.
 
@@ -80,7 +58,7 @@ Record the following fields in a structured note:
 - **Public exploit / PoC details** when explicitly cited in the references. Use only to map vulnerable APIs — do NOT execute them.
 - **Vendor-suggested workarounds.**
 
-### 4. Locate the Dependency in the Project
+### 3. Locate the Dependency in the Project
 
 Read the **Build tool** field from `project-standards.md` and use the matching method to find dependency coordinates and resolved versions:
 
@@ -101,7 +79,7 @@ For each coordinate found, record:
 
 If the dependency is **not present** at any coordinate, record this as the verdict and skip the code-mapping step.
 
-### 5. Map Vulnerable APIs to Project Usage
+### 4. Map Vulnerable APIs to Project Usage
 
 For each in-range coordinate, locate the cited vulnerable APIs / classes / endpoints / config options in the dependency's documentation (from the references) and search the project for usage:
 
@@ -128,7 +106,7 @@ Where the vulnerability requires a sink-style trigger (e.g., deserialization of 
 
 If feasible, write a **tiny standalone reproducer** that exercises the dependency API in isolation (a Java `main`, a Python snippet, a Go test) to confirm the *logic* matches the advisory description — **without** running the exploit against a live service.
 
-### 6. Cross-check Prior Work
+### 5. Cross-check Prior Work
 
 ```bash
 # Has anyone already filed an issue or PR mentioning this CVE/GHSA?
@@ -150,9 +128,9 @@ gh api "repos/<OWNER>/<REPO>/dependabot/alerts?state=open" \
   --jq '.[] | select(.security_advisory.cve_id == "<CVE-ID>")'
 ```
 
-If an alert exists, link to it; the user may prefer the `/oss-fix-github-alert dependabot alert=<NUMBER>` flow.
+If an alert exists, link to it; the user may prefer the Fix GitHub Alert guideline (`fix-github-alert.md`) flow.
 
-### 7. Produce the Exposure Report
+### 6. Produce the Exposure Report
 
 Output a structured report. Include the robot disclaimer at the top.
 
@@ -213,18 +191,18 @@ If no usage is found, state explicitly: "No project code reaches the vulnerable 
 - <question 2>
 ```
 
-### 8. Propose a Follow-up Path
+### 1. Propose a Follow-up Path
 
 Based on the verdict, offer one or more of the following actions. Do NOT execute any without explicit confirmation.
 
 **If exposed:**
 
-1. **Bump the dependency** - hand off to `/oss-quick-fix` with a short, sanitized description (e.g., `upgrade <dependency> to <patched-version>`). Do NOT include exploit specifics in the public commit/PR text. Reference the CVE only if the project's policy and the advisory's public status explicitly permit it.
-2. **Open a tracking issue** for follow-up work that exceeds a one-shot bump (config refactor, API migration after the upgrade, etc.) - hand off to `/oss-create-issue` with sanitized text. The proposed text MUST:
+1. **Bump the dependency** - hand off to the Quick Fix guideline (`quick-fix.md`) with a short, sanitized description (e.g., `upgrade <dependency> to <patched-version>`). Do NOT include exploit specifics in the public commit/PR text. Reference the CVE only if the project's policy and the advisory's public status explicitly permit it.
+2. **Open a tracking issue** for follow-up work that exceeds a one-shot bump (config refactor, API migration after the upgrade, etc.) - hand off to the Create Issue guideline (`create-issue.md`) with sanitized text. The proposed text MUST:
    - Frame the change as a hardening / dependency-update / refactor task.
    - Omit attack scenarios, exploit payloads, and exploitability commentary.
    - Reference the CVE only if the policy allows it.
-3. **Address an existing GitHub alert** - if Dependabot has already raised an alert for this advisory, hand off to `/oss-fix-github-alert dependabot alert=<NUMBER>` instead of opening a new flow.
+3. **Address an existing GitHub alert** - if Dependabot has already raised an alert for this advisory, follow the Fix GitHub Alert guideline (`fix-github-alert.md`) instead of opening a new flow.
 
 **If not exposed in current usage:**
 
@@ -240,7 +218,7 @@ Based on the verdict, offer one or more of the following actions. Do NOT execute
 
 In all cases, ask the user to confirm the sanitized text before any handoff.
 
-### 9. Constraints
+### 2. Constraints
 
 You MUST:
 - Include the :robot: disclaimer note at the top of the exposure report.
@@ -257,7 +235,7 @@ You MUST NOT:
 - Mark the project as "not exposed" without showing the data-flow reasoning.
 - Conclude exposure from the manifest version alone — confirm with the resolver (Maven / Gradle / npm / Cargo / Go) so transitive overrides and BOMs are accounted for.
 
-### 10. Acceptance Criteria
+### 3. Acceptance Criteria
 
 - The CVE record is fetched from at least one authoritative source (GHSA, NVD, OSV, or vendor advisory) and key fields are recorded.
 - For each affected coordinate, the resolved version is verified via the project's build tool.

@@ -1,36 +1,4 @@
-# Fix GitHub Security or Quality Alert
-
-Assign and fix a GitHub security or quality alert (Code Scanning, Dependabot, or Secret Scanning) for the current project. Unlike `/oss-fix-issue`, this command works directly with the alerts in the repository's "Security" tab — it does **not** create a tracking issue.
-
-## Usage
-
-```
-/oss-fix-github-alert <type> [options]
-```
-
-**Arguments:**
-- `<type>` - Alert source: `code-scanning`, `dependabot`, or `secret-scanning`
-
-**Options (space-separated after `<type>`):**
-- `alert=<number>` - Specific alert number to work on. If omitted, the command lists open alerts and stops so the user can pick one.
-- `severity=<level>` - Filter by severity (e.g., `critical`, `high`, `medium`, `low`, `error`, `warning`, `note`)
-- `rule=<rule-id>` - Filter by rule ID (code-scanning only, e.g., `js/sql-injection`)
-- `state=<state>` - Filter by alert state (default: `open`)
-- `limit=<n>` - Max alerts to display when listing (default: 10)
-- `assignee=<user>` - GitHub user to assign the alert to (default: current authenticated user)
-- `branch=<name>` - Custom branch name (default: `ci-alert-<type>-<NUMBER>`)
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-Read the **Issue tracker** field from the project's `project-info.md`. If the issue tracker is not `GitHub`, stop and tell the user: "GitHub security alerts are only available for GitHub-hosted projects."
-
-Read the **GitHub repo** field — this is `<OWNER>/<REPO>` for the API calls below.
-
-### 2. Parse Arguments
+### 1. Parse Arguments
 
 Validate `<type>` is one of: `code-scanning`, `dependabot`, `secret-scanning`. If missing or invalid, stop and tell the user the accepted values.
 
@@ -39,7 +7,7 @@ Parse the optional `key=value` arguments. Defaults:
 - `limit=10`
 - `assignee` = the current GitHub user (`gh api user --jq .login`)
 
-### 3. Determine the API Endpoint
+### 2. Determine the API Endpoint
 
 Each alert type uses a different REST API endpoint. References:
 - <https://docs.github.com/en/rest/code-scanning>
@@ -52,7 +20,7 @@ Each alert type uses a different REST API endpoint. References:
 | dependabot       | `repos/<OWNER>/<REPO>/dependabot/alerts`       | `PATCH repos/<OWNER>/<REPO>/dependabot/alerts/<NUMBER>`      |
 | secret-scanning  | `repos/<OWNER>/<REPO>/secret-scanning/alerts`  | `PATCH repos/<OWNER>/<REPO>/secret-scanning/alerts/<NUMBER>` |
 
-### 4. List Open Alerts (when `alert=` is not provided)
+### 3. List Open Alerts (when `alert=` is not provided)
 
 Fetch alerts from the list endpoint, applying filters:
 
@@ -68,7 +36,7 @@ Apply additional client-side filtering for `severity=` and `rule=` (code-scannin
 
 Display the results as a concise table: number, severity, rule (or package), affected file, and short description. Then **stop** and instruct the user to re-run with `alert=<number>` to work on a specific one.
 
-### 5. Fetch Alert Details
+### 4. Fetch Alert Details
 
 When `alert=<number>` is provided, fetch the alert:
 
@@ -84,7 +52,7 @@ Extract the relevant fields:
   gh api "repos/<OWNER>/<REPO>/secret-scanning/alerts/<NUMBER>/locations"
   ```
 
-### 6. Assign the Alert
+### 5. Assign the Alert
 
 Attempt to assign the alert to the contributor (default: current user):
 
@@ -99,7 +67,7 @@ GitHub's REST API support for the `assignees` field on security alerts is evolvi
 2. Print the alert URL (`html_url`) so the user can assign it manually in the GitHub web UI.
 3. **Continue with the fix workflow** — assignment is best-effort metadata, not a blocker.
 
-### 7. Analyze the Alert
+### 6. Analyze the Alert
 
 Investigate based on the alert type:
 
@@ -120,11 +88,11 @@ Investigate based on the alert type:
 - **WARN the user explicitly:** Removing the secret from the source tree is NOT enough. The secret must be **rotated/revoked at the provider** (e.g., regenerate the API key, invalidate the token). Removing it from git history is also recommended but is a separate, non-trivial operation.
 - **Ask the user to confirm they have rotated the secret** before proceeding with code changes.
 
-### 8. Locate Relevant Code
+### 7. Locate Relevant Code
 
 Read the affected file(s) and the surrounding context. For `dependabot`, read the dependency manifest (`pom.xml`, `package.json`, `go.mod`, `Cargo.toml`, etc.) referenced by `dependency.manifest_path`.
 
-### 9. Investigate Git History
+### 8. Investigate Git History
 
 Before changing anything, understand **why** the affected code is the way it is:
 
@@ -140,7 +108,7 @@ git blame -L <start>,<end> -- <file>
 - For secret-scanning, identify when the secret was first committed.
 - If the proposed fix would effectively revert a prior intentional commit, flag this to the user before proceeding.
 
-### 10. Implement the Fix
+### 9. Implement the Fix
 
 Apply the fix following these principles:
 
@@ -150,11 +118,11 @@ Apply the fix following these principles:
 
 Read the project's `project-standards.md` for any code style restrictions.
 
-### 11. Build & Test
+### 10. Build & Test
 
 Run the build/test commands from the project's `project-standards.md`. Tests MUST pass before committing.
 
-### 12. Constraints
+### 11. Constraints
 
 You MUST:
 - Process **one alert per invocation** — do not bulk-fix
@@ -171,7 +139,7 @@ You MUST NOT:
 - Open multiple PRs from a single invocation
 - Use the `Fix #<number>` form in commit messages (it would auto-close an unrelated issue if a number collides — see step 13)
 
-### 13. Workflow
+### 12. Workflow
 
 Read branch naming and PR policy from the project's `project-guidelines.md`.
 
@@ -221,9 +189,9 @@ Read branch naming and PR policy from the project's `project-guidelines.md`.
    ```
    Include the alert `html_url` in the PR body so reviewers can cross-reference. Do **not** include `Fixes #<number>` style references — security alerts are not GitHub issues.
 
-   **Agent attribution:** `<description>` MUST end with a footer identifying your AI agent. If your agent's system prompt already adds such a footer (e.g., Claude Code appends `Generated with [Claude Code]`), do NOT duplicate it. Other agents (Bob Shell, Gemini, OpenCode, Codex) MUST append a footer in the format: `Generated by <Agent Name> via /oss-fix-github-alert`.
+   **Agent attribution:** `<description>` MUST end with a footer identifying your AI agent. If your agent's system prompt already adds such a footer (e.g., Claude Code appends `Generated with [Claude Code]`), do NOT duplicate it. Other agents (Bob Shell, Gemini, OpenCode, Codex) MUST append a footer in the format: `Generated by <Agent Name> via OSS Helper`.
 
-### 14. Post-Merge: Update Alert State
+### 13. Post-Merge: Update Alert State
 
 After the PR is merged:
 
@@ -236,7 +204,7 @@ After the PR is merged:
     -f resolution_comment="Secret rotated at provider and removed from source"
   ```
 
-### 15. General Guidelines
+### 14. General Guidelines
 
 - Tests MUST pass before committing
 - Branch must be created from `main`
@@ -244,7 +212,7 @@ After the PR is merged:
 - For camel-core: do NOT parallelize Maven jobs; always run `mvn` in the module directory
 - GPG signing not required
 
-### 16. Acceptance Criteria
+### 15. Acceptance Criteria
 
 - The alert is fetched and (best-effort) assigned to the contributor
 - A targeted fix is applied — type-appropriate (code change, dependency bump, or secret removal + rotation)

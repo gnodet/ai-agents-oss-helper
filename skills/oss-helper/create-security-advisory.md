@@ -1,30 +1,11 @@
-# Report Security Vulnerability
-
-Privately report a security vulnerability to a GitHub repository using GitHub's private vulnerability reporting feature. This command is intended for security researchers and contributors — it does NOT require admin access.
-
-## Usage
-
-```
-/oss-create-security-advisory
-```
-
-**Arguments:**
-- None (all information is gathered interactively)
-
-## Instructions
-
-### 1. Initialize Project Context
-
-**MANDATORY:** First, read and process the `.oss-init.md` file to detect the current project and load its rules. All subsequent steps assume the project context (project-info, project-standards, project-guidelines) is loaded.
-
-### 2. Verify Eligibility
+### 1. Verify Eligibility
 
 Read the **Issue tracker** field from the project's `project-info.md`:
 - If the issue tracker is **not** `GitHub`, stop and tell the user: "Private vulnerability reporting is a GitHub-specific feature. This project uses a different issue tracker."
 
 Read the **GitHub repo** field. This will be used as `<OWNER>/<REPO>` for API calls.
 
-### 3. Check Private Vulnerability Reporting
+### 2. Check Private Vulnerability Reporting
 
 Verify that the repository has private vulnerability reporting enabled:
 
@@ -42,7 +23,7 @@ If the repository is private, warn the user: "This repository is private. Privat
 
 **Note:** There is no reliable way to check whether private vulnerability reporting is enabled via the API before submitting. If the API call in step 7 fails with a 403 or 404, the feature is likely not enabled. Inform the user and suggest they contact the repository maintainers directly.
 
-### 4. Gather Vulnerability Information
+### 3. Gather Vulnerability Information
 
 Collect the following from the user:
 
@@ -76,7 +57,7 @@ Ask the user if they want to add more affected packages. Repeat collection for e
 **Optional:**
 - **CWE IDs** - Common Weakness Enumeration identifiers (e.g., `CWE-89` for SQL injection, `CWE-79` for XSS). Suggest relevant CWEs based on the vulnerability description if possible.
 
-### 5. Format the Description
+### 4. Format the Description
 
 Structure the description in Markdown:
 
@@ -104,7 +85,7 @@ Structure the description in Markdown:
 
 If the user provided a free-form description, restructure it into this format. Ask the user to confirm the formatted version.
 
-### 6. Confirm with User
+### 1. Confirm with User
 
 Before submitting, present a full summary:
 - Summary (title)
@@ -120,7 +101,7 @@ Remind the user:
 
 Ask for explicit confirmation to proceed.
 
-### 7. Build and Submit the Report
+### 2. Build and Submit the Report
 
 Construct the JSON payload:
 
@@ -156,7 +137,7 @@ EOF
 
 **Important:** This uses the `/reports` endpoint, which is the private vulnerability reporting API for external reporters. It does NOT require admin access — any authenticated GitHub user can submit a report if the feature is enabled on the repository.
 
-### 8. Report Result
+### 3. Report Result
 
 After successful creation (HTTP 201), extract and display:
 - **GHSA ID** - The GitHub Security Advisory identifier (e.g., `GHSA-xxxx-xxxx-xxxx`)
@@ -170,7 +151,7 @@ Tell the user:
 - The user is automatically credited as the reporter
 - Do NOT disclose the vulnerability publicly until the maintainers have had a chance to address it (responsible disclosure)
 
-### 9. Handle Errors
+### 4. Handle Errors
 
 If the API call fails:
 - **403 Forbidden** - Private vulnerability reporting is not enabled for this repository. Suggest the user:
@@ -181,7 +162,7 @@ If the API call fails:
 - **422 Unprocessable Entity** - A field is invalid. Display the error message from the API response and help the user correct it.
 - **Any other error** - Display the full error response.
 
-### 10. Constraints
+### 5. Constraints
 
 You MUST:
 - Confirm all details with the user before submitting the report
@@ -200,7 +181,7 @@ You MUST NOT:
 - Include personally identifiable information beyond the user's GitHub username
 - Send malformed JSON to the API
 
-### 11. Acceptance Criteria
+### 6. Acceptance Criteria
 
 - A private vulnerability report is submitted to the repository via the GitHub API
 - The report has a well-structured description, appropriate severity, and correct package information
