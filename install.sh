@@ -43,6 +43,7 @@ SKILL_FILES=(
     "skills/oss-helper/list-pr-status.md"
     "skills/oss-helper/list-prs.md"
     "skills/oss-helper/merge-pr.md"
+    "skills/oss-helper/oss-create-rules.md"
     "skills/oss-helper/pr-status.md"
     "skills/oss-helper/quick-fix.md"
     "skills/oss-helper/review-pr.md"
@@ -69,6 +70,7 @@ GUIDELINE_COMMANDS=(
     "fix-sonarcloud.md|oss-fix-sonarcloud|Fix SonarCloud issues for a given rule"
     "install-info.md|oss-install-info|Install project rules from the known-projects repository"
     "list-issues.md|oss-list-issues|List issues assigned to you"
+    "oss-create-rules.md|oss-create-rules|Generate project rule files by auto-inspecting a repository"
     "list-pr-status.md|oss-list-pr-status|List all your open PRs with status summary"
     "list-prs.md|oss-list-prs|List all open PRs in the repository"
     "merge-pr.md|oss-merge-pr|Merge a PR after verifying requirements"
@@ -134,6 +136,7 @@ OLD_COMMAND_FILES=(
     "oss-review-pr.md"
     "oss-triage-security-report.md"
     "oss-update-knowledge.md"
+    "oss-create-rules.md"
 )
 
 # Old Codex individual skill directories to clean up

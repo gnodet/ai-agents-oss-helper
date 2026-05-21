@@ -268,5 +268,6 @@ After initialization, read and follow the appropriate guideline file based on th
 | Draft a CVE advisory page | `draft-cve.md` |
 | Create a GitHub security advisory | `create-security-advisory.md` |
 | Update project rule files | `update-knowledge.md` |
+| Generate project rule files for a repository | `oss-create-rules.md` |
 | Add a new project to the helper | `add-project.md` |
 | Install project rules from the known-projects repository | `install-info.md` |
