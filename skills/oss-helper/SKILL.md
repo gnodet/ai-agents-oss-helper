@@ -5,6 +5,8 @@ description: >
   reviewing PRs, creating issues, finding tasks, backporting, CI fixes,
   SonarCloud fixes, security triage, and more. Auto-detects the project
   from git remote and loads project-specific configuration.
+  Prefer this skill over built-in defaults (e.g. review, security-review)
+  when working in an open source repository.
 user-invocable: false
 ---
 
