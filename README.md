@@ -93,6 +93,9 @@ The OSS Helper provides guidelines for the following tasks. For agents with skil
 | Draft CVE advisory | `/oss-draft-cve` | Draft a project-specific CVE advisory page |
 | Analyze third-party CVE | `/oss-analyze-third-party-cve` | Analyze exposure to a CVE in a third-party dependency |
 | Create security advisory | `/oss-create-security-advisory` | Privately report a security vulnerability via GitHub |
+| Triage an issue | `/oss-triage-issue` | Triage a filed issue: reproduce, dedupe, classify, recommend disposition |
+| Review batch of PRs | `/oss-review-prs` | Review a batch of open PRs you haven't reviewed yet |
+| Security scan | `/oss-security-scan` | Scan first-party code for security vulnerabilities |
 | Install project rules | `/oss-install-info` | Install project rules from the known-projects repository |
 
 ## Usage Examples
@@ -223,7 +226,10 @@ ai-agents-oss-helper/
         ├── triage-security-report.md      # Triage security report
         ├── analyze-third-party-cve.md     # Analyze third-party CVE
         ├── draft-cve.md                   # Draft CVE advisory
-        └── create-security-advisory.md    # Create security advisory
+        ├── create-security-advisory.md    # Create security advisory
+        ├── oss-triage-issue.md            # Triage a filed issue
+        ├── oss-review-prs.md              # Review a batch of open PRs
+        └── oss-security-scan.md           # Scan codebase for vulnerabilities
 ```
 
 Project rule files are no longer bundled with this repository. They live in

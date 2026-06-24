@@ -40,6 +40,8 @@ git rev-parse --show-toplevel
 
 Check for project rules in the following order. Use the **first source found**:
 
+> Three rule files are always expected: `project-info.md`, `project-standards.md`, and `project-guidelines.md`. A fourth file, `project-security.md`, is **optional** — load it when present (it is consumed only by the security commands) and do not treat its absence as an error.
+
 #### A. Project-local rules (`.oss-ai-helper-rules/`)
 
 Check if `.oss-ai-helper-rules/` exists in the repository root:
@@ -52,6 +54,7 @@ If the directory exists, read the project's rule files directly from it:
 - `<repo-root>/.oss-ai-helper-rules/project-info.md` - Repository metadata, issue tracker, related repos
 - `<repo-root>/.oss-ai-helper-rules/project-standards.md` - Build tools, commands, code style
 - `<repo-root>/.oss-ai-helper-rules/project-guidelines.md` - Branching, commits, PR policies
+- `<repo-root>/.oss-ai-helper-rules/project-security.md` - (optional) Security/CVE-handling & publishing workflow — read it only if the file exists
 
 These project-local rules take precedence over installed rules. Proceed to **step 3** (Version Check).
 
@@ -72,6 +75,7 @@ Iterate over the subdirectories of that rules directory and read each `<project>
 - `<project>/project-info.md` - Repository metadata, issue tracker, related repos
 - `<project>/project-standards.md` - Build tools, commands, code style
 - `<project>/project-guidelines.md` - Branching, commits, PR policies
+- `<project>/project-security.md` - (optional) Security/CVE-handling & publishing workflow — read it only if the file exists
 
 Proceed to **step 3** (Version Check).
 
@@ -198,6 +202,8 @@ Create with:
 
 Use any project in the [`ai-agents-oss-known-projects`](https://github.com/Open-Harness-Engineering/ai-agents-oss-known-projects) repository as a template for the exact format.
 
+Do **not** auto-generate `project-security.md` — the security/CVE workflow cannot be reliably inferred from source. Leave it out; a maintainer can add it later (use any `camel-*` project in the known-projects repository as a reference).
+
 After creating the files, inform the user:
 
 - **Git repository:** > Project rules auto-generated in `.oss-ai-helper-rules/`. Review and adjust these files as needed. You can commit them to share with other contributors.
@@ -267,6 +273,9 @@ After initialization, read and follow the appropriate guideline file based on th
 | Analyze exposure to a third-party CVE | `analyze-third-party-cve.md` |
 | Draft a CVE advisory page | `draft-cve.md` |
 | Create a GitHub security advisory | `create-security-advisory.md` |
+| Triage a filed issue (maintainer-side) | `oss-triage-issue.md` |
+| Review a batch of open PRs | `oss-review-prs.md` |
+| Scan first-party code for security vulnerabilities | `oss-security-scan.md` |
 | Update project rule files | `update-knowledge.md` |
 | Generate project rule files for a repository | `oss-create-rules.md` |
 | Add a new project to the helper | `add-project.md` |

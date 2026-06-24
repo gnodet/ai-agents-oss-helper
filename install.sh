@@ -49,6 +49,9 @@ SKILL_FILES=(
     "skills/oss-helper/review-pr.md"
     "skills/oss-helper/triage-security-report.md"
     "skills/oss-helper/update-knowledge.md"
+    "skills/oss-helper/oss-triage-issue.md"
+    "skills/oss-helper/oss-review-prs.md"
+    "skills/oss-helper/oss-security-scan.md"
 )
 
 # Guideline files that become individual commands for agents without skill support.
@@ -79,6 +82,9 @@ GUIDELINE_COMMANDS=(
     "review-pr.md|oss-review-pr|Review a pull request"
     "triage-security-report.md|oss-triage-security-report|Triage an inbound security vulnerability report"
     "update-knowledge.md|oss-update-knowledge|Update project rule files"
+    "oss-triage-issue.md|oss-triage-issue|Triage a filed issue (maintainer-side)"
+    "oss-review-prs.md|oss-review-prs|Review a batch of open PRs"
+    "oss-security-scan.md|oss-security-scan|Scan codebase for security vulnerabilities"
 )
 
 # Old rule files to clean up (relative paths under rules/)
@@ -137,6 +143,9 @@ OLD_COMMAND_FILES=(
     "oss-triage-security-report.md"
     "oss-update-knowledge.md"
     "oss-create-rules.md"
+    "oss-triage-issue.md"
+    "oss-review-prs.md"
+    "oss-security-scan.md"
 )
 
 # Old Codex individual skill directories to clean up
